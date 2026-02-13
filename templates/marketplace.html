@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marketplace</title>
+</head>
+<body>
+    <h2>Marketplace</h2>
+
+    {% if products %}
+        {% for product in products %}
+            <p>{{ product.name }} - ₹{{ product.price }}</p>
+        {% endfor %}
+    {% else %}
+        <p>No products yet.</p>
+    {% endif %}
+
+    <a href="/add-product">Add Product</a>
+</body>
+</html>
