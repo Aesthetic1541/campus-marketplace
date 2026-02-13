@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <h2>Campus Marketplace</h2>
+    <div>
+        <a href="/marketplace">Back to Marketplace</a>
+    </div>
+</nav>
+
+<section class="product-detail">
+    <div class="detail-container">
+
+        <div class="detail-image">
+            <img src="{{ url_for('static', filename='images/book.jpg') }}" alt="Product">
+        </div>
+
+        <div class="detail-info">
+            <h2>{{ product.name }}</h2>
+            <p class="price">₹{{ product.price }}</p>
+            <p><strong>Category:</strong> {{ product.category }}</p>
+
+            <p><strong>Description:</strong><br>
+            {{ product.description }}
+            </p>
+
+            <hr>
+
+            <h3>Seller Information</h3>
+            <p>Name: {{ product.seller }}</p>
+
+
+            <button class="btn-primary">Contact Seller</button>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

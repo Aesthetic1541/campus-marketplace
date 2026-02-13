@@ -109,3 +109,27 @@ footer {
     font-weight: bold;
     margin: 10px 0;
 }
+
+
+/* -----------Product Details Page -----------*/
+
+.product-detail {
+    padding: 40px;
+}
+
+.detail-container {
+    display: flex;
+    gap: 40px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.detail-image img {
+    width: 300px;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+.detail-info {
+    flex: 1;
+}
