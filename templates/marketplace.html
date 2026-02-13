@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Marketplace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Marketplace</h2>
 
-    {% if products %}
-        {% for product in products %}
-            <p>{{ product.name }} - ₹{{ product.price }}</p>
-        {% endfor %}
-    {% else %}
-        <p>No products yet.</p>
-    {% endif %}
+<nav class="navbar">
+    <h2>Campus Marketplace</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/add-product" class="btn">Sell</a>
+    </div>
+</nav>
 
-    <a href="/add-product">Add Product</a>
+<section class="marketplace">
+    <h2>Available Products</h2>
+
+    <div class="product-grid">
+        <!-- Dummy Product Card -->
+        <div class="product-card">
+            <img src="{{ url_for('static', filename='images/book.jpg') }}" alt="Product">
+            <h3>Data Structures Book</h3>
+            <p class="price">₹250</p>
+            <p class="category">Books</p>
+            <a href="#" class="btn-primary">View Details</a>
+        </div>
+
+        <div class="product-card">
+            <img src="{{ url_for('static', filename='images/calculator.jpg') }}" alt="Product">
+            <h3>Scientific Calculator</h3>
+            <p class="price">₹400</p>
+            <p class="category">Electronics</p>
+            <a href="#" class="btn-primary">View Details</a>
+        </div>
+    </div>
+</section>
+
 </body>
 </html>
