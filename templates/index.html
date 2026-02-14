@@ -2,52 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Campus Marketplace</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>CampusMart | Campus Marketplace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Index Page CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-    <h2>Campus Marketplace</h2>
-    <div>
-        <a href="/login">Login</a>
-        <a href="/register" class="btn">Register</a>
-    </div>
-</nav>
+<div class="page-wrapper">
 
-<!-- HERO -->
-<section class="hero">
-    <h1>Buy & Sell Inside Your Campus</h1>
-    <p>A trusted marketplace exclusively for students</p>
-    <a href="/marketplace" class="btn-primary">Explore Marketplace</a>
-</section>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo-area">
+            <img src="{{ url_for('static', filename='images/campusmart-logo.png') }}" alt="CampusMart Logo">
+            <span>CampusMart</span>
+        </div>
 
-<!-- CATEGORIES -->
-<section class="categories">
-    <h2>Popular Categories</h2>
-    <div class="category-grid">
-        <div class="card">📚 Books & Notes</div>
-        <div class="card">💻 Electronics</div>
-        <div class="card">🚲 Cycles</div>
-        <div class="card">🛏 Hostel Items</div>
-    </div>
-</section>
+        <div class="nav-links">
+            <a href="/login">Login</a>
+            <a href="/register" class="btn">Register</a>
+        </div>
+    </nav>
 
-<!-- WHY US -->
-<section class="why-us">
-    <h2>Why Campus Marketplace?</h2>
-    <ul>
-        <li>✔ Verified students only</li>
-        <li>✔ No delivery, meet on campus</li>
-        <li>✔ Affordable prices</li>
-    </ul>
-</section>
+    <!-- MAIN CONTENT -->
+    <main class="content">
 
-<!-- FOOTER -->
-<footer>
-    <p>© 2026 Campus Marketplace | Your College Name</p>
-</footer>
+        <section class="hero">
+            <h1>Buy & Sell Inside Your Campus</h1>
+            <p>A trusted marketplace exclusively for GKV students</p>
+
+            <div class="hero-buttons">
+                <a href="/marketplace" class="primary-btn">Explore Marketplace</a>
+                <a href="/add-product" class="secondary-btn">Sell a Product</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <h3>📚 Student Only</h3>
+                <p>Only verified college email IDs allowed</p>
+            </div>
+
+            <div class="feature">
+                <h3>🔒 Safe & Trusted</h3>
+                <p>Admin-approved product listings</p>
+            </div>
+
+            <div class="feature">
+                <h3>📍 Hyperlocal</h3>
+                <p>Trade within your own campus</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 CampusMart | GKV Campus
+    </footer>
+
+</div>
 
 </body>
+
 </html>
