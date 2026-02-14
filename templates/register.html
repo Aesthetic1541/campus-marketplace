@@ -2,47 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register | Campus Marketplace</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Register | CampusMart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
-<nav class="navbar">
-    <h2>Campus Marketplace</h2>
-    <div>
-        <a href="/login">Login</a>
-    </div>
-</nav>
+<body class="bg-light">
 
-<section class="auth-container">
-    <h2>Create Your Account</h2>
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-5">
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="alert alert-warning">
-                {{ messages[0] }}
+            <!-- Card -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <h3 class="text-center mb-3">Create Account</h3>
+                    <p class="text-center text-muted">
+                        Register using your <b>@gkv.ac.in</b> email
+                    </p>
+
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <div class="alert alert-warning text-center">
+                          {{ messages[0] }}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+
+                    <!-- Register Form -->
+                    <form method="POST" action="/register">
+
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control"
+                                   name="name" placeholder="Enter your name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">College Email</label>
+                            <input type="email" class="form-control"
+                                   name="email" placeholder="example@gkv.ac.in" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control"
+                                   name="password" placeholder="Create a password" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <p class="text-center mb-0">
+                        Already have an account?
+                        <a href="/login">Login</a>
+                    </p>
+
+                </div>
             </div>
-        {% endif %}
-    {% endwith %}
+            <!-- Card End -->
 
+        </div>
+    </div>
+</div>
 
-    <form method="post">
-        <input type="text" name="name" placeholder="Full Name" required>
-
-        <input type="email" name="email" placeholder="College Email ID" required>
-
-        <input type="password" name="password" placeholder="Password" required>
-
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-
-        <button type="submit" class="btn-primary">Register</button>
-    </form>
-
-    <p class="auth-footer">
-        Already have an account?
-        <a href="/login">Login here</a>
-    </p>
-</section>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

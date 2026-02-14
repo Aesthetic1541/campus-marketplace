@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 
+from database import insert_user, get_user_by_email, create_users_table
+
 app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"  # Needed for flash messages
 
@@ -15,13 +17,25 @@ def home():
 
 
 # ---------------- AUTH ----------------
+
+# ----------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # TODO: login logic
-        return redirect(url_for("marketplace"))
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = get_user_by_email(email)
+        if user and user["password"] == password:
+            flash("Login successful.")
+            return redirect(url_for("marketplace"))
+        else:
+            flash("Invalid email or password.")
+            return redirect(url_for("login"))
     return render_template("login.html")
 
+
+# ---------------- REGISTER ----------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -29,13 +43,21 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
-        # College email validation
+        # 1. College email validation
         if not email.endswith("@gkv.ac.in"):
             flash("Only @gkv.ac.in email IDs are allowed to register.")
             return redirect(url_for("register"))
 
-        # TEMPORARY: no database yet
-        flash("Registration successful. You can now login.")
+        # 2. Check if email already exists
+        existing_user = get_user_by_email(email)
+        if existing_user:
+            flash("This email is already registered.")
+            return redirect(url_for("register"))
+
+        # 3. Insert user into database
+        insert_user(name, email, password)
+
+        flash("Registration successful. Please login.")
         return redirect(url_for("login"))
 
     return render_template("register.html")
