@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
-from database import insert_user, get_user_by_email, create_users_table
+from database import insert_user, get_user_by_email, create_users_table, insert_product, create_products_table
 
 app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"  # Needed for flash messages
+
+create_users_table()
+create_products_table()
+
+
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -123,14 +128,34 @@ def product_detail(product_id):
 
 
 
-
 # ---------------- ADD PRODUCT ----------------
 @app.route("/add-product", methods=["GET", "POST"])
 def add_product():
+    if "user_id" not in session:
+        flash("Please login to add a product.")
+        return redirect(url_for("login"))
+
     if request.method == "POST":
-        # TODO: save product to database
+        title = request.form.get("title")
+        price = request.form.get("price")
+        category = request.form.get("category")
+        description = request.form.get("description")
+        condition = request.form.get("condition")
+
+        insert_product(
+            title=title,
+            price=price,
+            category=category,
+            description=description,
+            condition=condition,
+            user_id=session["user_id"]
+        )
+
+        flash("Product submitted for approval.")
         return redirect(url_for("marketplace"))
+
     return render_template("add_product.html")
+
 
 
 
@@ -145,3 +170,6 @@ def add_product():
 # ---------------- RUN APP ----------------
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+

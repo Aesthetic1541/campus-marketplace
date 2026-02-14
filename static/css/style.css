@@ -110,6 +110,16 @@ footer {
     margin: 10px 0;
 }
 
+.alert {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 12px;
+    margin: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+
 
 /* -----------Product Details Page -----------*/
 

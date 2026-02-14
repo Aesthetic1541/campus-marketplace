@@ -54,3 +54,42 @@ def get_user_by_email(email):
     user = cursor.fetchone()
     conn.close()
     return user
+
+
+
+
+
+def insert_product(title, price, category, description, condition, user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO products (title, price, category, description, condition, status, user_id)
+        VALUES (?, ?, ?, ?, ?, 'pending', ?)
+    """, (title, price, category, description, condition, user_id))
+
+    conn.commit()
+    conn.close()
+
+
+
+def create_products_table():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            price INTEGER NOT NULL,
+            category TEXT NOT NULL,
+            description TEXT,
+            condition TEXT,
+            status TEXT DEFAULT 'pending',
+            user_id INTEGER,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+
+    conn.commit()
+    conn.close()
