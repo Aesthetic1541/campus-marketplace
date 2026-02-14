@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
+app.secret_key = "campusmart-secret-key"  # Needed for flash messages
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -24,11 +25,20 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        # TODO: registration logic
+        name = request.form.get("name")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        # College email validation
+        if not email.endswith("@gkv.ac.in"):
+            flash("Only @gkv.ac.in email IDs are allowed to register.")
+            return redirect(url_for("register"))
+
+        # TEMPORARY: no database yet
+        flash("Registration successful. You can now login.")
         return redirect(url_for("login"))
+
     return render_template("register.html")
-
-
 
 
 
