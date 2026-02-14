@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 
 from database import insert_user, get_user_by_email, create_users_table, insert_product, create_products_table
 
+from functools import wraps
+
 app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"  # Needed for flash messages
 
@@ -9,6 +11,30 @@ create_users_table()
 create_products_table()
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" not in session:
+            flash("Please login first.")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+from functools import wraps
+from flask import session, redirect, url_for, flash
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        print("LOGIN_REQUIRED CHECK RUNNING")  # 👈 DEBUG LINE
+        if "user_id" not in session:
+            print("USER NOT LOGGED IN")
+            flash("Please login first.")
+            return redirect(url_for("login"))
+        print("USER LOGGED IN")
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -82,6 +108,7 @@ def register():
 
 # ---------------- MARKETPLACE ----------------
 @app.route("/marketplace")
+@login_required
 def marketplace():
     # TODO: fetch products from database
     products = []  # placeholder
@@ -130,6 +157,7 @@ def product_detail(product_id):
 
 # ---------------- ADD PRODUCT ----------------
 @app.route("/add-product", methods=["GET", "POST"])
+@login_required
 def add_product():
     if "user_id" not in session:
         flash("Please login to add a product.")
@@ -157,6 +185,12 @@ def add_product():
     return render_template("add_product.html")
 
 
+# ---Logout route ----
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully.")
+    return redirect(url_for("login"))
 
 
 
@@ -164,6 +198,10 @@ def add_product():
 
 
 
+@app.route("/force-logout")
+def force_logout():
+    session.clear()
+    return "SESSION CLEARED"
 
 
 
