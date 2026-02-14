@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Login | CampusMart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Custom Login CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
-<body>
-    <h2>Login</h2>
-    <form method="post">
-        <input type="email" name="email" placeholder="College Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
+
+<body class="auth-page">
+
+<div class="auth-card">
+    <h3>Welcome Back</h3>
+    <p class="subtitle">Login using your <b>@gkv.ac.in</b> email</p>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert">
+            {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Login Form -->
+    <form method="POST" action="/login">
+
+        <label>College Email</label>
+        <input type="email" name="email" placeholder="example@gkv.ac.in" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+
         <button type="submit">Login</button>
     </form>
+
+    <p class="auth-footer">
+        Don’t have an account?
+        <a href="/register">Register</a>
+    </p>
+</div>
+
 </body>
 </html>
