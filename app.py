@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 from database import insert_user, get_user_by_email, create_users_table
 
@@ -26,13 +26,21 @@ def login():
         password = request.form.get("password")
 
         user = get_user_by_email(email)
-        if user and user["password"] == password:
-            flash("Login successful.")
-            return redirect(url_for("marketplace"))
-        else:
+
+        # If user does not exist or password is wrong
+        if not user or user["password"] != password:
             flash("Invalid email or password.")
             return redirect(url_for("login"))
+
+        # Login successful
+        session["user_id"] = user["id"]
+        session["user_name"] = user["name"]
+
+        flash("Login successful.")
+        return redirect(url_for("marketplace"))
+
     return render_template("login.html")
+
 
 
 # ---------------- REGISTER ----------------
