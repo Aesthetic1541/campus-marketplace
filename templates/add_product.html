@@ -34,11 +34,10 @@
             </select>
 
             <label>Description</label>
-            <textarea name="description" rows="4"
-                      placeholder="Add product description..." required></textarea>
+            <textarea name="description" rows="4" placeholder="Add product description..." required></textarea>
 
             <label>Price (₹)</label>
-            <input type="number" name="price" placeholder="Enter price" required>
+            <input type="number" name="price" min="0" step="0.01" placeholder="Enter price" required>
 
             <label>Product Image</label>
             <input type="file" name="image" accept="image/*">

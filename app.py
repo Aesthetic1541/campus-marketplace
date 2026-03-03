@@ -1,3 +1,4 @@
+from flask import session, redirect, url_for, flash
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 from database import insert_user, get_user_by_email, create_users_table, insert_product, create_products_table
@@ -13,10 +14,6 @@ create_users_table()
 create_products_table()
 
 
-
-from functools import wraps
-from flask import session, redirect, url_for, flash
-
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -30,14 +27,11 @@ def login_required(f):
     return decorated_function
 
 # ---------------- HOME ----------------
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
-
-
-
-
-
 
 
 # ---------------- AUTH ----------------
@@ -64,7 +58,6 @@ def login():
         return redirect(url_for("marketplace"))
 
     return render_template("login.html")
-
 
 
 # ---------------- REGISTER ----------------
@@ -101,21 +94,12 @@ def register():
     return render_template("register.html")
 
 
-
-
-
-
 # ---------------- MARKETPLACE ----------------
 @app.route("/marketplace")
 @login_required
 def marketplace():
     products = get_all_products()
     return render_template("marketplace.html", products=products)
-
-
-
-
-
 
 
 # ---------------- PRODUCT DETAILS ----------------
@@ -129,20 +113,27 @@ def product_detail(product_id):
     return render_template("product_detail.html", product=product)
 
 
-
-
-
-
 # ---------------- ADD PRODUCT ----------------
 @app.route("/add-product", methods=["GET", "POST"])
 @login_required
 def add_product():
     if request.method == "POST":
         title = request.form.get("title")
-        price = request.form.get("price")
+        price_str = request.form.get("price")
         category = request.form.get("category")
         description = request.form.get("description")
         condition = request.form.get("condition")
+
+        # --- NEW VALIDATION CONDITION ---
+        try:
+            price = float(price_str)
+            if price < 0:
+                flash("Price cannot be negative. Please enter a valid amount.")
+                return redirect(url_for("add_product"))
+        except (ValueError, TypeError):
+            flash("Invalid price format. Please enter a number.")
+            return redirect(url_for("add_product"))
+        # --------------------------------
 
         image_file = request.files.get("image")
 
@@ -150,6 +141,7 @@ def add_product():
 
         if image_file and image_file.filename != "":
             image_filename = secure_filename(image_file.filename)
+            os.makedirs("static/uploads", exist_ok=True)
             image_path = os.path.join("static/uploads", image_filename)
             image_file.save(image_path)
 
@@ -169,16 +161,13 @@ def add_product():
     return render_template("add_product.html")
 
 # ---Logout route ----
+
+
 @app.route("/logout")
 def logout():
     session.clear()
     flash("Logged out successfully.")
     return redirect(url_for("login"))
-
-
-
-
-
 
 
 @app.route("/force-logout")
@@ -187,11 +176,6 @@ def force_logout():
     return "SESSION CLEARED"
 
 
-
-
 # ---------------- RUN APP ----------------
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
