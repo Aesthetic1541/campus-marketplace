@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
 from database import insert_user, get_user_by_email, create_users_table, insert_product, create_products_table
-
+from database import get_all_products, get_product_by_id
 from functools import wraps
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"  # Needed for flash messages
@@ -10,15 +12,6 @@ app.secret_key = "campusmart-secret-key"  # Needed for flash messages
 create_users_table()
 create_products_table()
 
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            flash("Please login first.")
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-    return decorated_function
 
 
 from functools import wraps
@@ -81,19 +74,25 @@ def register():
         name = request.form.get("name")
         email = request.form.get("email")
         password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
 
-        # 1. College email validation
-        if not email.endswith("@gkv.ac.in"):
-            flash("Only @gkv.ac.in email IDs are allowed to register.")
+        # 🔹 1. Check passwords match
+        if password != confirm_password:
+            flash("Passwords do not match.")
             return redirect(url_for("register"))
 
-        # 2. Check if email already exists
+        # 🔹 2. College email validation
+        if not email.endswith("@gkv.ac.in"):
+            flash("Only @gkv.ac.in email IDs are allowed.")
+            return redirect(url_for("register"))
+
+        # 🔹 3. Check existing user
         existing_user = get_user_by_email(email)
         if existing_user:
             flash("This email is already registered.")
             return redirect(url_for("register"))
 
-        # 3. Insert user into database
+        # 🔹 4. Insert user
         insert_user(name, email, password)
 
         flash("Registration successful. Please login.")
@@ -110,8 +109,7 @@ def register():
 @app.route("/marketplace")
 @login_required
 def marketplace():
-    # TODO: fetch products from database
-    products = []  # placeholder
+    products = get_all_products()
     return render_template("marketplace.html", products=products)
 
 
@@ -123,26 +121,7 @@ def marketplace():
 # ---------------- PRODUCT DETAILS ----------------
 @app.route("/product/<int:product_id>")
 def product_detail(product_id):
-
-    # Temporary dummy data (FAKE DATABASE)
-    products = {
-        1: {
-            "name": "Data Structures Book",
-            "price": 250,
-            "category": "Books",
-            "description": "Well-maintained book, useful for exams.",
-            "seller": "Aditya"
-        },
-        2: {
-            "name": "Scientific Calculator",
-            "price": 400,
-            "category": "Electronics",
-            "description": "Casio calculator in good condition.",
-            "seller": "Rahul"
-        }
-    }
-
-    product = products.get(product_id)
+    product = get_product_by_id(product_id)
 
     if not product:
         return "Product not found", 404
@@ -154,15 +133,10 @@ def product_detail(product_id):
 
 
 
-
 # ---------------- ADD PRODUCT ----------------
 @app.route("/add-product", methods=["GET", "POST"])
 @login_required
 def add_product():
-    if "user_id" not in session:
-        flash("Please login to add a product.")
-        return redirect(url_for("login"))
-
     if request.method == "POST":
         title = request.form.get("title")
         price = request.form.get("price")
@@ -170,20 +144,29 @@ def add_product():
         description = request.form.get("description")
         condition = request.form.get("condition")
 
+        image_file = request.files.get("image")
+
+        image_filename = None
+
+        if image_file and image_file.filename != "":
+            image_filename = secure_filename(image_file.filename)
+            image_path = os.path.join("static/uploads", image_filename)
+            image_file.save(image_path)
+
         insert_product(
             title=title,
             price=price,
             category=category,
             description=description,
             condition=condition,
+            image=image_filename,
             user_id=session["user_id"]
         )
 
-        flash("Product submitted for approval.")
+        flash("Product submitted successfully.")
         return redirect(url_for("marketplace"))
 
     return render_template("add_product.html")
-
 
 # ---Logout route ----
 @app.route("/logout")

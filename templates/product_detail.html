@@ -1,48 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Product Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_detail.css') }}">
+{% extends "base.html" %}
 
-</head>
-<body>
+{% block title %}{{ product.title }} | CampusMart{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/product_detail.css') }}">
+{% endblock %}
+{% block content %}
 
-<nav class="navbar">
-    <h2>Campus Marketplace</h2>
-    <div>
-        <a href="/marketplace">Back to Marketplace</a>
-    </div>
-</nav>
+<div class="detail-wrapper">
 
-<section class="product-detail">
-    <div class="detail-container">
+    <div class="detail-card">
 
-        <div class="detail-image">
-            <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.name }}">
+        <div class="detail-left">
+            {% if product.image %}
+                <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Product Image">
+            {% else %}
+                <div class="detail-placeholder">No Image Available</div>
+            {% endif %}
         </div>
 
-        <div class="detail-info">
-            <h2>{{ product.name }}</h2>
-            <p class="price">₹{{ product.price }}</p>
-            <p><strong>Category:</strong> {{ product.category }}</p>
+        <div class="detail-right">
 
-            <p><strong>Description:</strong><br>
-            {{ product.description }}
+            <h2>{{ product.title }}</h2>
+
+            <p class="detail-price">₹{{ product.price }}</p>
+
+            <span class="detail-badge">
+                {{ product.condition }}
+            </span>
+
+            <p class="detail-category">
+                Category: {{ product.category }}
             </p>
 
-            <hr>
+            <div class="detail-description">
+                <h4>Description</h4>
+                <p>{{ product.description }}</p>
+            </div>
 
-            <h3>Seller Information</h3>
-            <p>Name: {{ product.seller }}</p>
+            <div class="seller-card">
+                <h4>Seller Information</h4>
+                <p>Contact seller through platform</p>
+            </div>
 
-
-            <button class="btn-primary">Contact Seller</button>
         </div>
 
     </div>
-</section>
 
-</body>
-</html>
+</div>
+
+{% endblock %}

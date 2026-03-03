@@ -1,46 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login | CampusMart</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <!-- Custom Login CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-</head>
+{% block title %}Login | CampusMart{% endblock %}
 
-<body class="auth-page">
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
 
-<div class="auth-card">
-    <h3>Welcome Back</h3>
-    <p class="subtitle">Login using your <b>@gkv.ac.in</b> email</p>
+{% block content %}
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="alert">
-            {{ messages[0] }}
-        </div>
-      {% endif %}
-    {% endwith %}
+<div class="auth-wrapper">
 
-    <!-- Login Form -->
-    <form method="POST" action="/login">
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">
+            Login using your <b>@gkv.ac.in</b> email
+        </p>
 
-        <label>College Email</label>
-        <input type="email" name="email" placeholder="example@gkv.ac.in" required>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="auth-alert">
+              {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
 
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Enter your password" required>
+        <form method="POST" action="/login">
 
-        <button type="submit">Login</button>
-    </form>
+            <label>College Email</label>
+            <input type="email" name="email"
+                   placeholder="example@gkv.ac.in" required>
 
-    <p class="auth-footer">
-        Don’t have an account?
-        <a href="/register">Register</a>
-    </p>
+            <label>Password</label>
+            <input type="password" name="password"
+                   placeholder="Enter your password" required>
+
+            <button type="submit" class="auth-btn">
+                Login
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Don’t have an account?
+            <a href="/register">Register</a>
+        </p>
+
+    </div>
+
 </div>
 
-</body>
-</html>
+{% endblock %}

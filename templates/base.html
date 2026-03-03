@@ -5,30 +5,34 @@
     <title>{% block title %}CampusMart{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Common CSS -->
+    <!-- Global CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <!-- Page-specific CSS -->
     {% block css %}{% endblock %}
 </head>
 
 <body>
 
-<!-- Navbar -->
 <nav class="navbar">
     <div class="nav-left">
-        <img src="{{ url_for('static', filename='images/campusmart-logo.jpg') }}"
-             alt="CampusMart Logo"
-             class="logo">
-        <span class="brand">CampusMart</span>
+        <span class="brand-white">Campus</span>
+        <span class="brand-blue">Mart</span>
     </div>
 
     <div class="nav-links">
         <a href="/">Home</a>
+
         {% if session.get("user_id") %}
             <a href="/marketplace">Marketplace</a>
             <a href="/add-product">Add Product</a>
-            <a href="/logout">Logout</a>
+
+            <div class="nav-profile">
+                <div class="avatar">
+                    {{ session.get("user_name")[0]|upper }}
+                </div>
+                <a href="/logout">Logout</a>
+            </div>
+
         {% else %}
             <a href="/login">Login</a>
             <a href="/register">Register</a>
@@ -36,13 +40,10 @@
     </div>
 </nav>
 
-
-<!-- Page Content -->
 <main>
     {% block content %}{% endblock %}
 </main>
 
-<!-- Footer -->
 <footer>
     <p>© 2026 CampusMart | Built for students</p>
 </footer>

@@ -1,83 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register | CampusMart</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block title %}Register | CampusMart{% endblock %}
 
-<body class="bg-light">
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
 
-<div class="container">
-    <div class="row justify-content-center align-items-center min-vh-100">
-        <div class="col-md-5">
+{% block content %}
 
-            <!-- Card -->
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
+<div class="auth-wrapper">
 
-                    <h3 class="text-center mb-3">Create Account</h3>
-                    <p class="text-center text-muted">
-                        Register using your <b>@gkv.ac.in</b> email
-                    </p>
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">
+            Register using your <b>@gkv.ac.in</b> email
+        </p>
 
-                    <!-- Flash Messages -->
-                    {% with messages = get_flashed_messages() %}
-                      {% if messages %}
-                        <div class="alert alert-warning text-center">
-                          {{ messages[0] }}
-                        </div>
-                      {% endif %}
-                    {% endwith %}
-
-                    <!-- Register Form -->
-                    <form method="POST" action="/register">
-
-                        <div class="mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control"
-                                   name="name" placeholder="Enter your name" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">College Email</label>
-                            <input type="email" class="form-control"
-                                   name="email" placeholder="example@gkv.ac.in" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-control"
-                                   name="password" placeholder="Create a password" required>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                Register
-                            </button>
-                        </div>
-                    </form>
-
-                    <hr>
-
-                    <p class="text-center mb-0">
-                        Already have an account?
-                        <a href="/login">Login</a>
-                    </p>
-
-                </div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="auth-alert">
+              {{ messages[0] }}
             </div>
-            <!-- Card End -->
+          {% endif %}
+        {% endwith %}
 
-        </div>
+        <form method="POST" action="/register">
+
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Enter your name" required>
+
+            <label>College Email</label>
+            <input type="email" name="email" placeholder="example@gkv.ac.in" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm your password" required>
+
+            <button type="submit" class="auth-btn">
+                Register
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="/login">Login</a>
+        </p>
+
     </div>
+
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function checkPasswordMatch() {
+    let pass = document.querySelector('input[name="password"]').value;
+    let confirm = document.querySelector('input[name="confirm_password"]').value;
 
-</body>
-</html>
+    if (pass !== confirm) {
+        document.querySelector('input[name="confirm_password"]').style.borderColor = "red";
+    } else {
+        document.querySelector('input[name="confirm_password"]').style.borderColor = "#00bfff";
+    }
+}
+</script>
+
+{% endblock %}

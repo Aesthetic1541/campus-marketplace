@@ -1,73 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Marketplace</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-<nav class="navbar">
-    <h2>CampusMart</h2>
+{% block title %}Marketplace{% endblock %}
 
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <!-- <a href="/marketplace">Marketplace</a> -->
-        <a href="/add-product">Add Product</a>
-
-        <a href="/product/{{ product.id }}" class="product-card">
-            <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Product">
-            <h3>{{ product.title }}</h3>
-            <p class="price">₹{{ product.price }}</p>
-        </a>
-
-
-
-
-        {% if session.get("user_id") %}
-            <span>Hi, {{ session.get("user_name") }}</span>
-            <a href="/logout">Logout</a>
-        {% else %}
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        {% endif %}
-    </div>
-</nav>
-
-
+{% block content %}
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div class="alert">
-        {{ messages[0] }}
-    </div>
+    <div class="alert">{{ messages[0] }}</div>
   {% endif %}
 {% endwith %}
-
 
 <section class="marketplace">
     <h2>Available Products</h2>
 
     <div class="product-grid">
-        <!-- Dummy Product Card -->
-        <div class="product-card">
-            <img src="{{ url_for('static', filename='images/book.jpg') }}" alt="Product">
-            <h3>Data Structures Book</h3>
-            <p class="price">₹250</p>
-            <p class="category">Books</p>
-            <a href="/product/1" class="btn-primary">View Details</a>
-        </div>
 
-        <div class="product-card">
-            <img src="{{ url_for('static', filename='images/calculator.jpg') }}" alt="Product">
-            <h3>Scientific Calculator</h3>
-            <p class="price">₹400</p>
-            <p class="category">Electronics</p>
-            <a href="/product/1" class="btn-primary">View Details</a>
+        {% if products %}
+            {% for product in products %}
+                <div class="product-card">
 
-        </div>
+                    {% if product.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Product Image">
+                    {% else %}
+                        <div class="image-placeholder">No Image</div>
+                    {% endif %}
+
+                    <h3>{{ product.title }}</h3>
+                    <p class="price">₹{{ product.price }}</p>
+                    <p class="category">{{ product.category }}</p>
+
+                    <a href="/product/{{ product.id }}" class="btn">
+                        View Details
+                    </a>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No products available yet.</p>
+        {% endif %}
+
     </div>
 </section>
 
-</body>
-</html>
+{% endblock %}

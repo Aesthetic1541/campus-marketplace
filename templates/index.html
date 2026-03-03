@@ -1,70 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CampusMart | Campus Marketplace</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <!-- Index Page CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-</head>
+{% block title %}CampusMart | Campus Marketplace{% endblock %}
 
-<body>
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
-<div class="page-wrapper">
+{% block content %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo-area">
-            <img src="{{ url_for('static', filename='images/campusmart-logo.jpg') }}" alt="CampusMart Logo">
-            <span>CampusMart</span>
+<section class="hero">
+    <div class="hero-content">
+        <h1>Buy & Sell Inside Your Campus</h1>
+        <p>The safest marketplace built exclusively for GKV students.</p>
+
+        <div class="hero-buttons">
+            <a href="/marketplace" class="btn-primary">Explore Marketplace</a>
+            <a href="/register" class="btn-outline">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Why CampusMart?</h2>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>📚 Students Only</h3>
+            <p>Only verified college email users allowed.</p>
         </div>
 
-        <div class="nav-links">
-            <a href="/login">Login</a>
-            <a href="/register" class="btn">Register</a>
+        <div class="feature-card">
+            <h3>🔒 Safe & Secure</h3>
+            <p>Direct peer-to-peer communication within campus.</p>
         </div>
-    </nav>
 
-    <!-- MAIN CONTENT -->
-    <main class="content">
+        <div class="feature-card">
+            <h3>⚡ Fast & Simple</h3>
+            <p>Post products in seconds and start selling instantly.</p>
+        </div>
+    </div>
+</section>
 
-        <section class="hero">
-            <h1>Buy & Sell Inside Your Campus</h1>
-            <p>A trusted marketplace exclusively for GKV students</p>
+<section class="cta">
+    <h2>Ready to Sell Something?</h2>
+    <a href="/add-product" class="btn-primary">Post Your First Product</a>
+</section>
 
-            <div class="hero-buttons">
-                <a href="/marketplace" class="primary-btn">Explore Marketplace</a>
-                <a href="/add-product" class="secondary-btn">Sell a Product</a>
-            </div>
-        </section>
-
-        <section class="features">
-            <div class="feature">
-                <h3>📚 Student Only</h3>
-                <p>Only verified college email IDs allowed</p>
-            </div>
-
-            <div class="feature">
-                <h3>🔒 Safe & Trusted</h3>
-                <p>Admin-approved product listings</p>
-            </div>
-
-            <div class="feature">
-                <h3>📍 Hyperlocal</h3>
-                <p>Trade within your own campus</p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-        © 2026 CampusMart | GKV Campus
-    </footer>
-
-</div>
-
-</body>
-
-</html>
+{% endblock %}

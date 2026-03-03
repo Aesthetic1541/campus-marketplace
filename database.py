@@ -1,16 +1,17 @@
 import sqlite3
 
+
 DB_NAME = "campusmart.db"
 
 
-# Connect to database
+# ---------------- CONNECTION ----------------
 def get_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
 
 
-# Create users table
+# ---------------- USERS ----------------
 def create_users_table():
     conn = get_connection()
     cursor = conn.cursor()
@@ -28,7 +29,6 @@ def create_users_table():
     conn.close()
 
 
-# Insert new user
 def insert_user(name, email, password):
     conn = get_connection()
     cursor = conn.cursor()
@@ -42,67 +42,18 @@ def insert_user(name, email, password):
     conn.close()
 
 
-# Get user by email (for login)
 def get_user_by_email(email):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT * FROM users WHERE email = ?
-    """, (email,))
-
+    cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
     user = cursor.fetchone()
+
     conn.close()
     return user
 
 
-
-
-
-def insert_product(title, price, category, description, condition, user_id):
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO products (title, price, category, description, condition, status, user_id)
-        VALUES (?, ?, ?, ?, ?, 'pending', ?)
-    """, (title, price, category, description, condition, user_id))
-
-    conn.commit()
-    conn.close()
-
-
-
-
-def get_product_by_id(product_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT id, title, price, category, description, image, seller_name
-        FROM products
-        WHERE id = ?
-    """, (product_id,))
-
-    row = cursor.fetchone()
-    conn.close()
-
-    if row:
-        return {
-            "id": row[0],
-            "name": row[1],
-            "price": row[2],
-            "category": row[3],
-            "description": row[4],
-            "image": row[5],
-            "seller": row[6]
-        }
-
-    return None
-
-
-
-
+# ---------------- PRODUCTS ----------------
 def create_products_table():
     conn = get_connection()
     cursor = conn.cursor()
@@ -115,7 +66,8 @@ def create_products_table():
             category TEXT NOT NULL,
             description TEXT,
             condition TEXT,
-            status TEXT DEFAULT 'pending',
+            image TEXT,
+            status TEXT DEFAULT 'approved',
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
@@ -123,3 +75,49 @@ def create_products_table():
 
     conn.commit()
     conn.close()
+
+
+def insert_product(title, price, category, description, condition, image, user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO products
+        (title, price, category, description, condition, image, status, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, 'approved', ?)
+    """, (title, price, category, description, condition, image, user_id))
+
+    conn.commit()
+    conn.close()
+
+
+# 🔥 NEW: Fetch all products
+def get_all_products():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM products
+        WHERE status = 'approved'
+        ORDER BY id DESC
+    """)
+
+    products = cursor.fetchall()
+    conn.close()
+
+    return products
+
+
+# 🔥 Fixed product by ID
+def get_product_by_id(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM products WHERE id = ?
+    """, (product_id,))
+
+    product = cursor.fetchone()
+    conn.close()
+
+    return product

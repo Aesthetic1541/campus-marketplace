@@ -1,154 +1,89 @@
-/* ===================== */
-/* RESET */
-/* ===================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+/* ===== HERO ===== */
 
-html, body {
-    height: 100%;
-}
-
-/* ===================== */
-/* PAGE LAYOUT */
-/* ===================== */
-.page-wrapper {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Content expands to push footer down */
-.content {
-    flex: 1;
-}
-
-/* ===================== */
-/* NAVBAR */
-/* ===================== */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    background: white;
-    border-bottom: 1px solid #ddd;
-}
-
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo-area img {
-    width: 40px;
-}
-
-.logo-area span {
-    font-size: 20px;
-    font-weight: bold;
-    color: #0d6efd;
-}
-
-.nav-links a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #333;
-}
-
-.nav-links .btn {
-    background: #0d6efd;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 4px;
-}
-
-/* ===================== */
-/* HERO */
-/* ===================== */
 .hero {
+    padding: 120px 20px;
     text-align: center;
-    padding: 80px 20px;
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #1f1f1f, #121212);
 }
 
-.hero h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
+.hero-content h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
 }
 
-.hero p {
+.hero-content p {
     font-size: 18px;
-    color: #555;
-}
-
-.hero-buttons {
-    margin-top: 30px;
+    color: #bbb;
+    margin-bottom: 30px;
 }
 
 .hero-buttons a {
     margin: 10px;
-    padding: 12px 20px;
+    padding: 12px 25px;
+    border-radius: 6px;
     text-decoration: none;
-    border-radius: 5px;
-    display: inline-block;
+    font-weight: 500;
 }
 
-.primary-btn {
-    background: #0d6efd;
+/* Primary Button */
+.btn-primary {
+    background: #007bff;
     color: white;
 }
 
-.secondary-btn {
-    border: 1px solid #0d6efd;
-    color: #0d6efd;
+.btn-primary:hover {
+    background: #0056b3;
 }
 
-/* ===================== */
-/* FEATURES */
-/* ===================== */
+/* Outline Button */
+.btn-outline {
+    border: 1px solid #007bff;
+    color: #007bff;
+}
+
+.btn-outline:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* ===== FEATURES ===== */
+
 .features {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.features h2 {
+    margin-bottom: 40px;
+}
+
+.feature-grid {
     display: flex;
     justify-content: center;
     gap: 40px;
-    padding: 60px 20px;
+    flex-wrap: wrap;
 }
 
-.feature {
-    max-width: 220px;
+.feature-card {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 8px;
+    width: 260px;
+    transition: 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+}
+
+/* ===== CTA ===== */
+
+.cta {
+    padding: 80px 20px;
     text-align: center;
+    background: #181818;
 }
 
-/* ===================== */
-/* FOOTER */
-/* ===================== */
-footer {
-    background: #222;
-    color: white;
-    text-align: center;
-    padding: 15px;
-}
-
-/* ===================== */
-/* RESPONSIVE */
-/* ===================== */
-@media (max-width: 768px) {
-
-    .navbar {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .features {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .hero h1 {
-        font-size: 28px;
-    }
+.cta h2 {
+    margin-bottom: 20px;
 }
