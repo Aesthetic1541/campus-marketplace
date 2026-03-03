@@ -89,3 +89,32 @@ body.auth-page {
     margin-bottom: 15px;
     text-align: center;
 }
+
+
+/* ==========For Image Slider=========== */
+
+.image-slider-section {
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
+    position: relative;
+    margin-top: 60px;
+}
+
+.slider {
+    width: 100%;
+    height: 100%;
+}
+
+.slides {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform 1s ease-in-out;
+}
+
+.slides img {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+}

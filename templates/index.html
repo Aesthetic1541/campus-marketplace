@@ -20,6 +20,21 @@
     </div>
 </section>
 
+<section class="image-slider-section">
+    <div class="container">
+        <div class="slider">
+            <div class="slides">
+                <img src="{{ url_for('static', filename='images/1.png') }}">
+                <img src="{{ url_for('static', filename='images/2.png') }}">
+                <img src="{{ url_for('static', filename='images/3.png') }}">
+                <img src="{{ url_for('static', filename='images/4.png') }}">
+                <img src="{{ url_for('static', filename='images/5.png') }}">
+                <img src="{{ url_for('static', filename='images/6.png') }}">
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="features">
     <h2>Why CampusMart?</h2>
 
@@ -46,4 +61,30 @@
     <a href="/add-product" class="btn-primary">Post Your First Product</a>
 </section>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slidesContainer = document.querySelector(".slides");
+    const slides = document.querySelectorAll(".slides img");
+    let index = 0;
+
+    function showSlide() {
+        const slideWidth = slides[0].clientWidth;
+        slidesContainer.style.transform = `translateX(-${index * slideWidth}px)`;
+    }
+
+    function nextSlide() {
+        index++;
+        if (index >= slides.length) {
+            index = 0;
+        }
+        showSlide();
+    }
+
+    setInterval(nextSlide, 4000);
+
+    window.addEventListener("resize", showSlide);
+});
+</script>
 {% endblock %}
