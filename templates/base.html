@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CampusMart{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Page-specific CSS -->
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="{{ url_for('static', filename='images/campusmart-logo.jpg') }}"
+             alt="CampusMart Logo"
+             class="logo">
+        <span class="brand">CampusMart</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        {% if session.get("user_id") %}
+            <a href="/marketplace">Marketplace</a>
+            <a href="/add-product">Add Product</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        {% endif %}
+    </div>
+</nav>
+
+
+<!-- Page Content -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 CampusMart | Built for students</p>
+</footer>
+
+</body>
+</html>

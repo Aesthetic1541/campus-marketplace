@@ -15,6 +15,15 @@
         <!-- <a href="/marketplace">Marketplace</a> -->
         <a href="/add-product">Add Product</a>
 
+        <a href="/product/{{ product.id }}" class="product-card">
+            <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Product">
+            <h3>{{ product.title }}</h3>
+            <p class="price">₹{{ product.price }}</p>
+        </a>
+
+
+
+
         {% if session.get("user_id") %}
             <span>Hi, {{ session.get("user_name") }}</span>
             <a href="/logout">Logout</a>

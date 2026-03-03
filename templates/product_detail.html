@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Product Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_detail.css') }}">
+
 </head>
 <body>
 
@@ -18,7 +20,7 @@
     <div class="detail-container">
 
         <div class="detail-image">
-            <img src="{{ url_for('static', filename='images/book.jpg') }}" alt="Product">
+            <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.name }}">
         </div>
 
         <div class="detail-info">

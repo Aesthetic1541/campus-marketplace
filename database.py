@@ -73,6 +73,36 @@ def insert_product(title, price, category, description, condition, user_id):
 
 
 
+
+def get_product_by_id(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, title, price, category, description, image, seller_name
+        FROM products
+        WHERE id = ?
+    """, (product_id,))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        return {
+            "id": row[0],
+            "name": row[1],
+            "price": row[2],
+            "category": row[3],
+            "description": row[4],
+            "image": row[5],
+            "seller": row[6]
+        }
+
+    return None
+
+
+
+
 def create_products_table():
     conn = get_connection()
     cursor = conn.cursor()
