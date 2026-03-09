@@ -3,3 +3,4 @@ __pycache__/
 *.db
 static/images/*.pdf
 *.db
+static/uploads/
