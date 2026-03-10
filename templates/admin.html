@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-container">
+
+    <h1>Admin Dashboard</h1>
+
+
+    <!-- ================= PENDING PRODUCTS ================= -->
+
+    <h2>Pending Products</h2>
+
+    <table class="admin-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Seller</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for product in pending_products %}
+
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.title }}</td>
+                <td>₹{{ product.price }}</td>
+                <td>{{ product.user_id }}</td>
+
+                <td>
+
+                    <a href="/approve_product/{{ product.id }}" class="approve-btn">
+                        Approve
+                    </a>
+
+                    <a href="/delete_product/{{ product.id }}" class="delete-btn">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="5">No pending products</td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- ================= ALL PRODUCTS ================= -->
+
+    <h2>All Products</h2>
+
+    <table class="admin-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Seller</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for product in products %}
+
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.title }}</td>
+                <td>₹{{ product.price }}</td>
+                <td>{{ product.user_id }}</td>
+
+                <td>
+
+                    <a href="/delete_product/{{ product.id }}" class="delete-btn">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- ================= USERS ================= -->
+
+    <h2>All Users</h2>
+
+    <table class="admin-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for user in users %}
+
+            <tr>
+
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+
+                <td>
+
+                    <a href="/delete_user/{{ user.id }}" class="delete-btn">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

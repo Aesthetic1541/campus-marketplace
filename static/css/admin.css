@@ -1,0 +1,111 @@
+/* ================= ADMIN DASHBOARD ================= */
+
+.admin-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+/* Title */
+
+.admin-container h1 {
+    font-size: 32px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Section Titles */
+
+.admin-container h2 {
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-left: 4px solid #00bfff;
+    padding-left: 10px;
+}
+
+/* ================= TABLE ================= */
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header */
+
+.admin-table thead {
+    background: linear-gradient(135deg, #007bff, #00bfff);
+}
+
+.admin-table th {
+    padding: 14px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Rows */
+
+.admin-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Hover effect */
+
+.admin-table tbody tr:hover {
+    background: #252525;
+}
+
+/* ================= BUTTONS ================= */
+
+.delete-btn {
+    background: #ff4d4d;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #cc0000;
+}
+
+/* Approve button */
+
+.approve-btn {
+    background: #28a745;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.approve-btn:hover {
+    background: #1e7e34;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .admin-table th,
+    .admin-table td {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .admin-container {
+        width: 95%;
+    }
+
+}

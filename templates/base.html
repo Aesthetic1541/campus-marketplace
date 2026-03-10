@@ -13,36 +13,76 @@
 
 <body>
 
+<!-- ================= NAVBAR ================= -->
+
 <nav class="navbar">
+
+    <!-- Hamburger (mobile only) -->
+    <div class="hamburger" id="hamburger">
+        ☰
+    </div>
+
+    <!-- Logo -->
     <div class="nav-left">
         <span class="brand-white">Campus</span>
         <span class="brand-blue">Mart</span>
     </div>
 
-    <div class="nav-links">
+    <!-- Desktop Menu -->
+    <div class="desktop-menu">
+
         <a href="/">Home</a>
 
         {% if session.get("user_id") %}
             <a href="/marketplace">Marketplace</a>
             <a href="/add-product">Add Product</a>
 
-            <div class="nav-profile">
-                <div class="avatar">
-                    {{ session.get("user_name")[0]|upper }}
-                </div>
-                <a href="/logout">Logout</a>
-            </div>
+            {% if session.get("role") == "admin" %}
+                <a href="/admin">Admin Panel</a>
+            {% endif %}
+
+            <a href="/logout">Logout</a>
 
         {% else %}
             <a href="/login">Login</a>
             <a href="/register">Register</a>
         {% endif %}
+
     </div>
+
 </nav>
+
+
+<!-- ================= MOBILE MENU ================= -->
+
+<div class="mobile-menu" id="mobileMenu">
+
+    <a href="/">Home</a>
+
+    {% if session.get("user_id") %}
+        <a href="/marketplace">Marketplace</a>
+        <a href="/add-product">Add Product</a>
+
+        {% if session.get("role") == "admin" %}
+            <a href="/admin">Admin Panel</a>
+        {% endif %}
+
+        <a href="/logout">Logout</a>
+
+    {% else %}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    {% endif %}
+
+</div>
+
+<!-- ================= PAGE CONTENT ================= -->
 
 <main>
     {% block content %}{% endblock %}
 </main>
+
+<!-- ================= FOOTER ================= -->
 
 <footer class="footer">
     <div class="container">
@@ -50,6 +90,23 @@
         <p class="creator">Designed & Developed by Aditya Singh Khagi</p>
     </div>
 </footer>
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const hamburger = document.getElementById("hamburger");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    hamburger.addEventListener("click", function(){
+        mobileMenu.classList.toggle("show");
+    });
+
+});
+
+</script>
 
 </body>
 </html>
