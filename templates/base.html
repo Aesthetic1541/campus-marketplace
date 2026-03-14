@@ -9,18 +9,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     {% block css %}{% endblock %}
+
+    <style>
+        /* Close button inside mobile menu */
+        .mobile-menu-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 26px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+        .mobile-menu-close:hover {
+            color: white;
+        }
+
+        /* Dark overlay behind sidebar */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+        }
+        .menu-overlay.show {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
 
 <!-- ================= NAVBAR ================= -->
-
 <nav class="navbar">
 
     <!-- Hamburger (mobile only) -->
-    <div class="hamburger" id="hamburger">
-        ☰
-    </div>
+    <div class="hamburger" id="hamburger">☰</div>
 
     <!-- Logo -->
     <div class="nav-left">
@@ -30,45 +57,39 @@
 
     <!-- Desktop Menu -->
     <div class="desktop-menu">
-
         <a href="/">Home</a>
-
         {% if session.get("user_id") %}
             <a href="/marketplace">Marketplace</a>
             <a href="/add-product">Add Product</a>
-
             {% if session.get("role") == "admin" %}
                 <a href="/admin">Admin Panel</a>
             {% endif %}
-
             <a href="/logout">Logout</a>
-
         {% else %}
             <a href="/login">Login</a>
             <a href="/register">Register</a>
         {% endif %}
-
     </div>
 
 </nav>
 
+<!-- ================= OVERLAY ================= -->
+<div class="menu-overlay" id="menuOverlay"></div>
 
 <!-- ================= MOBILE MENU ================= -->
-
 <div class="mobile-menu" id="mobileMenu">
 
-    <a href="/">Home</a>
+    <!-- ✕ Close button -->
+    <button class="mobile-menu-close" id="menuClose">✕</button>
 
+    <a href="/">Home</a>
     {% if session.get("user_id") %}
         <a href="/marketplace">Marketplace</a>
         <a href="/add-product">Add Product</a>
-
         {% if session.get("role") == "admin" %}
             <a href="/admin">Admin Panel</a>
         {% endif %}
-
         <a href="/logout">Logout</a>
-
     {% else %}
         <a href="/login">Login</a>
         <a href="/register">Register</a>
@@ -77,13 +98,11 @@
 </div>
 
 <!-- ================= PAGE CONTENT ================= -->
-
 <main>
     {% block content %}{% endblock %}
 </main>
 
 <!-- ================= FOOTER ================= -->
-
 <footer class="footer">
     <div class="container">
         <p>© 2026 CampusMart. Built for GKV students.</p>
@@ -92,19 +111,29 @@
 </footer>
 
 <!-- ================= JAVASCRIPT ================= -->
-
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
+    /* ── Mobile sidebar ── */
+    const hamburger   = document.getElementById("hamburger");
+    const mobileMenu  = document.getElementById("mobileMenu");
+    const menuClose   = document.getElementById("menuClose");
+    const menuOverlay = document.getElementById("menuOverlay");
 
-    const hamburger = document.getElementById("hamburger");
-    const mobileMenu = document.getElementById("mobileMenu");
+    function openMenu() {
+        mobileMenu.classList.add("show");
+        menuOverlay.classList.add("show");
+    }
 
-    hamburger.addEventListener("click", function(){
-        mobileMenu.classList.toggle("show");
-    });
+    function closeMenu() {
+        mobileMenu.classList.remove("show");
+        menuOverlay.classList.remove("show");
+    }
 
-});
+    hamburger.addEventListener("click", openMenu);
+    menuClose.addEventListener("click", closeMenu);
+    menuOverlay.addEventListener("click", closeMenu);   // tap outside to close
+
+
 
 </script>
 

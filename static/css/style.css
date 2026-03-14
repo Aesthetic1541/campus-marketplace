@@ -1,10 +1,43 @@
+/* ================= THEME VARIABLES ================= */
+
+:root {
+
+    --bg-main: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-navbar: rgba(20,20,20,0.9);
+    --bg-hero: #181818;
+
+    --text-main: white;
+    --text-muted: #aaa;
+
+    --border-color: #333;
+
+}
+
+/* Light Theme */
+
+body.light-mode {
+
+    --bg-main: #f6f8fa;
+    --bg-secondary: #ffffff;
+    --bg-navbar: #ffffff;
+    --bg-hero: #f0f2f5;
+
+    --text-main: #111;
+    --text-muted: #555;
+
+    --border-color: #ddd;
+
+}
+
+
 /* ================= GLOBAL ================= */
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #121212;
-    color: white;
+    background-color: var(--bg-main);
+    color: var(--text-main);
 }
 
 main {
@@ -27,7 +60,7 @@ main {
 
     padding: 18px 30px;
 
-    background: rgba(20,20,20,0.9);
+    background: var(--bg-navbar);
     backdrop-filter: blur(10px);
 
     border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -139,7 +172,7 @@ main {
 .hero {
     text-align:center;
     padding:80px 20px;
-    background:#181818;
+    background:var(--bg-hero);
 }
 
 /* ================= BUTTONS ================= */
@@ -175,7 +208,7 @@ main {
 }
 
 .product-card{
-    background:#1e1e1e;
+    background:var(--bg-secondary);
     padding:20px;
     border-radius:8px;
     transition:0.3s;
@@ -220,7 +253,7 @@ main {
 }
 
 .form-card{
-    background:#1e1e1e;
+    background:var(--bg-secondary);
     padding:40px;
     width:100%;
     max-width:500px;
@@ -241,7 +274,7 @@ main {
     padding:10px;
     border-radius:6px;
     border:1px solid #333;
-    background:#2a2a2a;
+    background:var(--bg-secondary);
     color:white;
 }
 
@@ -412,5 +445,20 @@ main {
 .desktop-menu a:hover::after{
 
     width:100%;
+
+}
+
+
+/* ================= THEME TOGGLE ================= */
+
+.theme-btn{
+
+    background:none;
+    border:none;
+
+    font-size:20px;
+    cursor:pointer;
+
+    margin-right:10px;
 
 }

@@ -3,7 +3,8 @@ import sqlite3
 DB_NAME = "campusmart.db"
 
 
-# ---------------- DATABASE CONNECTION ----------------
+# ================= DATABASE CONNECTION =================
+
 def get_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
@@ -15,6 +16,7 @@ def get_connection():
 # =====================================================
 
 def create_users_table():
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -33,21 +35,31 @@ def create_users_table():
 
 
 # ---------------- INSERT USER ----------------
+
 def insert_user(name, email, password):
+
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Automatically make your email admin
+    if email == "246301012@gkv.ac.in":
+        role = "admin"
+    else:
+        role = "user"
+
     cursor.execute("""
         INSERT INTO users (name, email, password, role)
-        VALUES (?, ?, ?, 'user')
-    """, (name, email, password))
+        VALUES (?, ?, ?, ?)
+    """, (name, email, password, role))
 
     conn.commit()
     conn.close()
 
 
 # ---------------- GET USER BY EMAIL ----------------
+
 def get_user_by_email(email):
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -63,7 +75,9 @@ def get_user_by_email(email):
 
 
 # ---------------- GET ALL USERS ----------------
+
 def get_all_users():
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -79,7 +93,9 @@ def get_all_users():
 
 
 # ---------------- DELETE USER ----------------
+
 def delete_user(user_id):
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -92,26 +108,12 @@ def delete_user(user_id):
     conn.close()
 
 
-# ---------------- PROMOTE USER TO ADMIN ----------------
-# def make_admin(email):
-#     conn = get_connection()
-#     cursor = conn.cursor()
-
-#     cursor.execute("""
-#         UPDATE users
-#         SET role = 'admin'
-#         WHERE email = ?
-#     """, (email,))
-
-#     conn.commit()
-#     conn.close()
-
-
 # =====================================================
 # PRODUCTS TABLE
 # =====================================================
 
 def create_products_table():
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -135,7 +137,9 @@ def create_products_table():
 
 
 # ---------------- INSERT PRODUCT ----------------
+
 def insert_product(title, price, category, description, condition, image, user_id):
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -150,6 +154,7 @@ def insert_product(title, price, category, description, condition, image, user_i
 
 
 # ---------------- GET ALL PRODUCTS ----------------
+
 def get_all_products():
 
     conn = get_connection()
@@ -165,8 +170,11 @@ def get_all_products():
     conn.close()
     return products
 
-# ---------------- GET ALL PENDING PRODUCTS ----------------
+
+# ---------------- GET PENDING PRODUCTS ----------------
+
 def get_pending_products():
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -183,15 +191,17 @@ def get_pending_products():
     return products
 
 
-# ---------------- GET ALL APPROVED PRODUCTS ----------------
+# ---------------- GET APPROVED PRODUCTS ----------------
+
 def get_approved_products():
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT * FROM products
-        WHERE status='approved'
+        SELECT *
+        FROM products
+        WHERE status = 'approved'
         ORDER BY id DESC
     """)
 
@@ -200,8 +210,11 @@ def get_approved_products():
     conn.close()
     return products
 
+
 # ---------------- GET PRODUCT BY ID ----------------
+
 def get_product_by_id(product_id):
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -215,7 +228,9 @@ def get_product_by_id(product_id):
     conn.close()
     return product
 
+
 # ---------------- APPROVE PRODUCT ----------------
+
 def approve_product(product_id):
 
     conn = get_connection()
@@ -232,7 +247,9 @@ def approve_product(product_id):
 
 
 # ---------------- DELETE PRODUCT ----------------
+
 def delete_product(product_id):
+
     conn = get_connection()
     cursor = conn.cursor()
 

@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 import os
+import random
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Mail, Message
 
 from database import (
     insert_user,
@@ -16,7 +18,6 @@ from database import (
     delete_product,
     delete_user,
     get_pending_products,
-    # make_admin,
     get_connection,
     get_approved_products
 )
@@ -25,33 +26,110 @@ app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"
 
 
-# ---------------- DATABASE INITIALIZATION ----------------
+# =========================================
+# EMAIL CONFIGURATION
+# =========================================
+
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = "246301012@gkv.ac.in"
+app.config["MAIL_PASSWORD"] = "qxnfqiobrqipjtzo"
+
+mail = Mail(app)
+
+
+# =========================================
+# DATABASE INITIALIZATION
+# =========================================
+
 create_users_table()
 create_products_table()
 
 
-# ---------------- LOGIN REQUIRED DECORATOR ----------------
+# =========================================
+# LOGIN REQUIRED DECORATOR
+# =========================================
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+
         if "user_id" not in session:
             flash("Please login first.")
             return redirect(url_for("login"))
+
         return f(*args, **kwargs)
+
     return decorated_function
 
 
-# =========================================================
+# =========================================
+# OTP FUNCTIONS
+# =========================================
+
+def generate_otp():
+    return random.randint(100000, 999999)
+
+
+def send_otp(email, otp):
+
+    msg = Message(
+        "CampusMart Email Verification",
+        sender=app.config["MAIL_USERNAME"],
+        recipients=[email]
+    )
+
+    msg.body = f"""
+Hello,
+
+Your CampusMart verification OTP is:
+
+{otp}
+
+This OTP is valid for a short time.
+
+CampusMart Team
+
+"""
+
+    mail.send(msg)
+
+
+@app.route("/resend-otp")
+def resend_otp():
+
+    temp_user = session.get("temp_user")
+
+    if not temp_user:
+        flash("Session expired. Please register again.")
+        return redirect(url_for("register"))
+
+    email = temp_user["email"]
+
+    otp = generate_otp()
+
+    session["otp"] = otp
+
+    send_otp(email, otp)
+
+    flash("A new OTP has been sent to your email.")
+
+    return redirect(url_for("verify_otp"))
+
+# =========================================
 # HOME PAGE
-# =========================================================
+# =========================================
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# =========================================================
+# =========================================
 # LOGIN
-# =========================================================
+# =========================================
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -66,20 +144,21 @@ def login():
             flash("Invalid email or password.")
             return redirect(url_for("login"))
 
-        # Login successful
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
         session["role"] = user["role"]
 
         flash("Login successful.")
+
         return redirect(url_for("marketplace"))
 
     return render_template("login.html")
 
 
-# =========================================================
-# REGISTER
-# =========================================================
+# =========================================
+# REGISTER (STEP 1 - SEND OTP)
+# =========================================
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -90,39 +169,81 @@ def register():
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
 
-        # Check password match
         if password != confirm_password:
             flash("Passwords do not match.")
             return redirect(url_for("register"))
 
-        # Allow only college emails
         if not email.endswith("@gkv.ac.in"):
-            flash("Only @gkv.ac.in email IDs are allowed.")
+            flash("Only @gkv.ac.in email IDs allowed.")
             return redirect(url_for("register"))
 
-        # Check existing user
         existing_user = get_user_by_email(email)
+
         if existing_user:
-            flash("This email is already registered.")
+            flash("Email already registered.")
             return redirect(url_for("register"))
-        
-        # 4. Insert user with hashed password 
 
-        hashed_password = generate_password_hash(password)
+        otp = generate_otp()
 
-        print("HASHED:", hashed_password)
+        session["otp"] = otp
+        session["temp_user"] = {
+            "name": name,
+            "email": email,
+            "password": password
+        }
 
-        insert_user(name, email, hashed_password)
+        send_otp(email, otp)
 
-        flash("Registration successful. Please login.")
-        return redirect(url_for("login"))
+        flash("OTP sent to your email.")
+
+        return redirect(url_for("verify_otp"))
 
     return render_template("register.html")
 
 
-# =========================================================
+# =========================================
+# OTP VERIFICATION
+# =========================================
+
+@app.route("/verify-otp", methods=["GET", "POST"])
+def verify_otp():
+
+    if request.method == "POST":
+
+        user_otp = request.form.get("otp")
+
+        if int(user_otp) == session.get("otp"):
+
+            user_data = session.get("temp_user")
+
+            hashed_password = generate_password_hash(user_data["password"])
+
+            insert_user(
+                user_data["name"],
+                user_data["email"],
+                hashed_password
+            )
+
+            session.pop("otp", None)
+            session.pop("temp_user", None)
+
+            flash("Email verified. Please login.")
+
+            return redirect(url_for("login"))
+
+        else:
+
+            flash("Invalid OTP.")
+
+            return redirect(url_for("verify_otp"))
+
+    return render_template("verify_otp.html")
+
+
+# =========================================
 # MARKETPLACE
-# =========================================================
+# =========================================
+
 @app.route("/marketplace")
 @login_required
 def marketplace():
@@ -135,9 +256,10 @@ def marketplace():
     )
 
 
-# =========================================================
+# =========================================
 # PRODUCT DETAILS
-# =========================================================
+# =========================================
+
 @app.route("/product/<int:product_id>")
 def product_detail(product_id):
 
@@ -152,9 +274,10 @@ def product_detail(product_id):
     )
 
 
-# =========================================================
+# =========================================
 # ADD PRODUCT
-# =========================================================
+# =========================================
+
 @app.route("/add-product", methods=["GET", "POST"])
 @login_required
 def add_product():
@@ -167,8 +290,8 @@ def add_product():
         description = request.form.get("description")
         condition = request.form.get("condition")
 
-        # Price validation
         try:
+
             price = float(price_str)
 
             if price < 0:
@@ -209,9 +332,10 @@ def add_product():
     return render_template("add_product.html")
 
 
-# =========================================================
+# =========================================
 # LOGOUT
-# =========================================================
+# =========================================
+
 @app.route("/logout")
 def logout():
 
@@ -222,9 +346,10 @@ def logout():
     return redirect(url_for("login"))
 
 
-# =========================================================
+# =========================================
 # ADMIN DASHBOARD
-# =========================================================
+# =========================================
+
 @app.route("/admin")
 @login_required
 def admin_dashboard():
@@ -244,9 +369,10 @@ def admin_dashboard():
     )
 
 
-# =========================================================
+# =========================================
 # ADMIN DELETE PRODUCT
-# =========================================================
+# =========================================
+
 @app.route("/delete_product/<int:id>")
 @login_required
 def delete_product_route(id):
@@ -259,9 +385,10 @@ def delete_product_route(id):
     return redirect(url_for("admin_dashboard"))
 
 
-# =========================================================
+# =========================================
 # ADMIN DELETE USER
-# =========================================================
+# =========================================
+
 @app.route("/delete_user/<int:id>")
 @login_required
 def delete_user_route(id):
@@ -273,9 +400,11 @@ def delete_user_route(id):
 
     return redirect(url_for("admin_dashboard"))
 
-# ========================================================
-# Admin Approval Route 
-# ========================================================
+
+# =========================================
+# ADMIN APPROVE PRODUCT
+# =========================================
+
 @app.route("/approve_product/<int:id>")
 @login_required
 def approve_product_route(id):
@@ -285,22 +414,25 @@ def approve_product_route(id):
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
+
+    cursor.execute(
+        """
         UPDATE products
         SET status = 'approved'
         WHERE id = ?
-    """, (id,))
+        """,
+        (id,)
+    )
 
     conn.commit()
     conn.close()
-    # approve_product(id)
 
     return redirect(url_for("admin_dashboard"))
 
 
-
-# =========================================================
+# =========================================
 # RUN SERVER
-# =========================================================
+# =========================================
+
 if __name__ == "__main__":
     app.run(debug=True)
