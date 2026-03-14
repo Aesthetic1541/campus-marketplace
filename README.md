@@ -68,20 +68,6 @@ http://127.0.0.1:5000
 
 ---
 
-## Email OTP Configuration
-
-To enable email verification, configure the following in `app.py`.
-
-
-MAIL_SERVER = smtp.gmail.com
-MAIL_PORT = 587
-MAIL_USE_TLS = True
-MAIL_USERNAME = 246301012@gkv.ac.in
-
-MAIL_PASSWORD = qxnfqiobrqipjtzo
-
-
-
 
 Use a **Google App Password** instead of your Gmail password.
 
