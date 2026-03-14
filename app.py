@@ -37,7 +37,7 @@ app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = os.getenv("EMAIL_USER")
 app.config["MAIL_PASSWORD"] = os.getenv("EMAIL_PASS")
-
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("EMAIL_USER")
 mail = Mail(app)
 
 
@@ -75,28 +75,31 @@ def generate_otp():
 
 
 def send_otp(email, otp):
+    try:
+        msg = Message(
+            "CampusMart Email Verification",
+            sender=app.config["MAIL_USERNAME"],
+            recipients=[email]
+        )
 
-    msg = Message(
-        "CampusMart Email Verification",
-        sender=app.config["MAIL_USERNAME"],
-        recipients=[email]
-    )
+        msg.body = f"""
+    Hello,
 
-    msg.body = f"""
-Hello,
+    Your CampusMart verification OTP is:
 
-Your CampusMart verification OTP is:
+    {otp}
 
-{otp}
+    This OTP is valid for a short time.
 
-This OTP is valid for a short time.
+    Thank you,
+    CampusMart Team
+    Administered by Aditya Singh Khagi(246301012@gkv.ac.in)
+    """
 
-CampusMart Team
-
-"""
-
-    mail.send(msg)
-
+        mail.send(msg)
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        print("OTP for", email, "is", otp)
 
 @app.route("/resend-otp")
 def resend_otp():
