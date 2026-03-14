@@ -20,7 +20,7 @@
                 <div class="product-card">
 
                     {% if product.image %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="Product Image">
+                        <img src="{{ url_for('static', filename='uploads/' + product.image) }}" alt="Product Image">
                     {% else %}
                         <div class="image-placeholder">No Image</div>
                     {% endif %}
