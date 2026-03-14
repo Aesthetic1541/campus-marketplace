@@ -166,7 +166,6 @@ def product_detail(product_id):
 # =========================================
 # ADD PRODUCT
 # =========================================
-
 @app.route("/add-product", methods=["GET", "POST"])
 @login_required
 def add_product():
@@ -195,14 +194,21 @@ def add_product():
 
         if image_file and image_file.filename != "":
 
-            image_filename = secure_filename(image_file.filename)
+            filename = secure_filename(image_file.filename)
 
-            upload_folder = os.path.join(app.root_path, "static/uploads")
+            # create unique filename
+            import uuid
+            unique_name = str(uuid.uuid4()) + "_" + filename
+
+            # correct upload folder
+            upload_folder = os.path.join(app.root_path, "static", "uploads")
             os.makedirs(upload_folder, exist_ok=True)
 
-            image_path = os.path.join(upload_folder, image_filename)
+            image_path = os.path.join(upload_folder, unique_name)
 
             image_file.save(image_path)
+
+            image_filename = unique_name
 
         insert_product(
             title=title,
