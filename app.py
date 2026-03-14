@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 import os
-import random
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_mail import Mail, Message
 
 from database import (
     insert_user,
@@ -24,21 +22,6 @@ from database import (
 
 app = Flask(__name__)
 app.secret_key = "campusmart-secret-key"
-
-
-# =========================================
-# EMAIL CONFIGURATION
-# =========================================
-
-
-
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = os.getenv("EMAIL_USER")
-app.config["MAIL_PASSWORD"] = os.getenv("EMAIL_PASS")
-app.config["MAIL_DEFAULT_SENDER"] = os.getenv("EMAIL_USER")
-mail = Mail(app)
 
 
 # =========================================
@@ -65,62 +48,6 @@ def login_required(f):
 
     return decorated_function
 
-
-# =========================================
-# OTP FUNCTIONS
-# =========================================
-
-def generate_otp():
-    return random.randint(100000, 999999)
-
-
-def send_otp(email, otp):
-    try:
-        msg = Message(
-            "CampusMart Email Verification",
-            sender=app.config["MAIL_USERNAME"],
-            recipients=[email]
-        )
-
-        msg.body = f"""
-    Hello,
-
-    Your CampusMart verification OTP is:
-
-    {otp}
-
-    This OTP is valid for a short time.
-
-    Thank you,
-    CampusMart Team
-    Administered by Aditya Singh Khagi(246301012@gkv.ac.in)
-    """
-
-        mail.send(msg)
-    except Exception as e:
-        print(f"Error sending email: {e}")
-        print("OTP for", email, "is", otp)
-
-@app.route("/resend-otp")
-def resend_otp():
-
-    temp_user = session.get("temp_user")
-
-    if not temp_user:
-        flash("Session expired. Please register again.")
-        return redirect(url_for("register"))
-
-    email = temp_user["email"]
-
-    otp = generate_otp()
-
-    session["otp"] = otp
-
-    send_otp(email, otp)
-
-    flash("A new OTP has been sent to your email.")
-
-    return redirect(url_for("verify_otp"))
 
 # =========================================
 # HOME PAGE
@@ -161,7 +88,7 @@ def login():
 
 
 # =========================================
-# REGISTER (STEP 1 - SEND OTP)
+# REGISTER
 # =========================================
 
 @app.route("/register", methods=["GET", "POST"])
@@ -188,61 +115,18 @@ def register():
             flash("Email already registered.")
             return redirect(url_for("register"))
 
-        otp = generate_otp()
+        hashed_password = generate_password_hash(password)
 
-        session["otp"] = otp
-        session["temp_user"] = {
-            "name": name,
-            "email": email,
-            "password": password
-        }
+        insert_user(
+            name,
+            email,
+            hashed_password
+        )
 
-        send_otp(email, otp)
-
-        flash("OTP sent to your email.")
-
-        return redirect(url_for("verify_otp"))
+        flash("Registration successful. Please login.")
+        return redirect(url_for("login"))
 
     return render_template("register.html")
-
-
-# =========================================
-# OTP VERIFICATION
-# =========================================
-
-@app.route("/verify-otp", methods=["GET", "POST"])
-def verify_otp():
-
-    if request.method == "POST":
-
-        user_otp = request.form.get("otp")
-
-        if int(user_otp) == session.get("otp"):
-
-            user_data = session.get("temp_user")
-
-            hashed_password = generate_password_hash(user_data["password"])
-
-            insert_user(
-                user_data["name"],
-                user_data["email"],
-                hashed_password
-            )
-
-            session.pop("otp", None)
-            session.pop("temp_user", None)
-
-            flash("Email verified. Please login.")
-
-            return redirect(url_for("login"))
-
-        else:
-
-            flash("Invalid OTP.")
-
-            return redirect(url_for("verify_otp"))
-
-    return render_template("verify_otp.html")
 
 
 # =========================================
@@ -296,7 +180,6 @@ def add_product():
         condition = request.form.get("condition")
 
         try:
-
             price = float(price_str)
 
             if price < 0:
