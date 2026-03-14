@@ -30,11 +30,13 @@ app.secret_key = "campusmart-secret-key"
 # EMAIL CONFIGURATION
 # =========================================
 
+
+
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "246301012@gkv.ac.in"
-app.config["MAIL_PASSWORD"] = "qxnfqiobrqipjtzo"
+app.config["MAIL_USERNAME"] = os.getenv("EMAIL_USER")
+app.config["MAIL_PASSWORD"] = os.getenv("EMAIL_PASS")
 
 mail = Mail(app)
 
