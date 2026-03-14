@@ -38,7 +38,26 @@ The platform allows users to list products, browse available items, and connect 
 ---
 
 ## Project Structure
-![alt text](image-1.png)
+campus-marketplace
+│
+├── app.py
+├── database.py
+├── requirements.txt
+│
+├── static
+│ ├── css
+│ └── uploads
+│
+└── templates
+├── base.html
+├── index.html
+├── login.html
+├── register.html
+├── marketplace.html
+├── add_product.html
+├── product_detail.html
+├── admin.html
+└── verify_otp.html
 
 
 ---
