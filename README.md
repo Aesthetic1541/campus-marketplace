@@ -85,7 +85,7 @@ Use a **Google App Password** instead of your Gmail password.
 
 ## Author
 
-Aditya Singh  
+Aditya Singh Khagi  
 B.Tech Student
 
 ---
