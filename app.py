@@ -197,9 +197,10 @@ def add_product():
 
             image_filename = secure_filename(image_file.filename)
 
-            os.makedirs("static/uploads", exist_ok=True)
+            upload_folder = os.path.join(app.root_path, "static/uploads")
+            os.makedirs(upload_folder, exist_ok=True)
 
-            image_path = os.path.join("static/uploads", image_filename)
+            image_path = os.path.join(upload_folder, image_filename)
 
             image_file.save(image_path)
 
