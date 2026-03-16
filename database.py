@@ -126,7 +126,8 @@ def create_products_table():
             description TEXT,
             condition TEXT,
             image TEXT,
-            status TEXT DEFAULT 'approved',
+            phone TEXT,
+            status TEXT DEFAULT 'pending',
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
@@ -138,16 +139,16 @@ def create_products_table():
 
 # ---------------- INSERT PRODUCT ----------------
 
-def insert_product(title, price, category, description, condition, image, user_id):
+def insert_product(title, price, category, description, condition, image, phone, user_id):
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO products
-        (title, price, category, description, condition, image, status, user_id)
-        VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)
-    """, (title, price, category, description, condition, image, user_id))
+        (title, price, category, description, condition, image, phone, status, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+    """, (title, price, category, description, condition, image, phone, user_id))
 
     conn.commit()
     conn.close()
@@ -161,27 +162,8 @@ def get_all_products():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT * FROM products
-        ORDER BY id DESC
-    """)
-
-    products = cursor.fetchall()
-
-    conn.close()
-    return products
-
-
-# ---------------- GET PENDING PRODUCTS ----------------
-
-def get_pending_products():
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
         SELECT *
         FROM products
-        WHERE status = 'pending'
         ORDER BY id DESC
     """)
 
@@ -202,6 +184,26 @@ def get_approved_products():
         SELECT *
         FROM products
         WHERE status = 'approved'
+        ORDER BY id DESC
+    """)
+
+    products = cursor.fetchall()
+
+    conn.close()
+    return products
+
+
+# ---------------- GET PENDING PRODUCTS ----------------
+
+def get_pending_products():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM products
+        WHERE status = 'pending'
         ORDER BY id DESC
     """)
 
@@ -238,8 +240,8 @@ def approve_product(product_id):
 
     cursor.execute("""
         UPDATE products
-        SET status='approved'
-        WHERE id=?
+        SET status = 'approved'
+        WHERE id = ?
     """, (product_id,))
 
     conn.commit()

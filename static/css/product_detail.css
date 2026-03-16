@@ -203,6 +203,21 @@
 
 }
 
+.chat-btn{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    background:#25D366;
+    color:white;
+    text-decoration:none;
+    border-radius:6px;
+    font-weight:600;
+}
+
+.chat-btn:hover{
+    background:#1ebe5d;
+}
+
 /* ===== MOBILE RESPONSIVE ===== */
 
 @media(max-width:900px){

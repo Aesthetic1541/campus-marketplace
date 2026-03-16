@@ -37,9 +37,21 @@
                 <p>{{ product.description }}</p>
             </div>
 
-            <div class="seller-card">
+          <div class="seller-card">
+
                 <h4>Seller Information</h4>
-                <p>Contact seller through platform</p>
+
+                <p>📍 Meet inside campus</p>
+                <p>💰 Payment after inspection</p>
+
+                <a href="https://wa.me/{{ product.phone }}?text=Hi, I am interested in your product {{ product.title }} on CampusMart"
+                target="_blank"
+                class="chat-btn">
+
+                Chat with Seller
+
+                </a>
+
             </div>
 
         </div>

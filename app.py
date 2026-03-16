@@ -171,12 +171,23 @@ def product_detail(product_id):
 def add_product():
 
     if request.method == "POST":
-
         title = request.form.get("title")
         price_str = request.form.get("price")
         category = request.form.get("category")
         description = request.form.get("description")
         condition = request.form.get("condition")
+        phone = request.form.get("phone")
+
+        phone = phone.strip()
+
+        if phone.startswith("+"):
+            phone = phone[1:]
+
+        if phone.startswith("0"):
+            phone = phone[1:]
+
+        if not phone.startswith("91"):
+            phone = "91" + phone
 
         try:
             price = float(price_str)
@@ -217,6 +228,7 @@ def add_product():
             description=description,
             condition=condition,
             image=image_filename,
+            phone=phone,
             user_id=session["user_id"]
         )
 
